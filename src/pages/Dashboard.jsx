@@ -8,6 +8,7 @@ import useUser from "../hooks/use-user";
 import UserDialog from "../components/user/use-dialog";
 import UserDeleteDialog from "../components/user/user-delete";
 import UserStatusDialog from "../components/user/user-status";
+import { useAuth } from "../auth/AuthProvider";
 
 export default function Dashboard() {
   const {
@@ -28,9 +29,14 @@ export default function Dashboard() {
     columns,
   } = useUser();
 
+  const { user: useAuthData } = useAuth();
+
+  const [searchValue, setSearchValue] = useState("");
+
   useEffect(() => {
-    getUsers();
-  }, []);
+    getUsers(searchValue);
+    console.log("searchValue:", searchValue);
+  }, [searchValue]);
 
   return (
     <AppLayout title="Tableau de bord">
@@ -38,21 +44,25 @@ export default function Dashboard() {
       <div className="px-4 lg:px-6">
         <div className="flex items-center justify-between gap-2 my-5">
           <h4>Liste des utilisateurs</h4>
-          <Button
-            variant="default"
-            size="sm"
-            onClick={() => {
-              setUser(null);
-              setOpenDialog(true);
-            }}
-          >
-            <Plus /> Ajouter un utilisateur
-          </Button>
+          {useAuthData?.role === "admin" && (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => {
+                setUser(null);
+                setOpenDialog(true);
+              }}
+            >
+              <Plus /> Ajouter un utilisateur
+            </Button>
+          )}
         </div>
 
         <DataTable
           data={data}
           onSetData={setData}
+          searchValue={searchValue}
+          onSetSearchValue={setSearchValue}
           columns={columns}
           searchable={true}
           showPagination={true}

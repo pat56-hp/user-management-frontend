@@ -13,6 +13,7 @@ import { Edit, ToggleLeft, ToggleRight, Trash, UserCircle } from "lucide-react";
 import { useAuth } from "../auth/AuthProvider";
 
 export default function useUser() {
+  const { user: userAuthData } = useAuth();
   const [data, setData] = useState([]);
   const [statistics, setStatistics] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
@@ -23,7 +24,6 @@ export default function useUser() {
 
   const { clearData } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-
   const [errors, setErrors] = useState({
     nom: "",
     email: "",
@@ -69,7 +69,8 @@ export default function useUser() {
       key: "created_at",
       label: "Date de création",
     },
-    {
+    //Si l'utilisateur est admin, on affiche les actions
+    userAuthData?.role === "admin" && {
       key: "action",
       label: "Action",
       render: (user) => (
@@ -95,25 +96,27 @@ export default function useUser() {
           >
             {user.actif === "Oui" ? <ToggleRight /> : <ToggleLeft />}
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={() => {
-              setUserId(user.id);
-              setOpenDeleteDialog(true);
-            }}
-          >
-            <Trash />
-          </Button>
+          {userAuthData?.id !== user.id && (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => {
+                setUserId(user.id);
+                setOpenDeleteDialog(true);
+              }}
+            >
+              <Trash />
+            </Button>
+          )}
         </div>
       ),
     },
   ];
 
   //Recuperation des users
-  const getUsers = () => {
+  const getUsers = (query = "") => {
     setIsLoading(true);
-    getUsersApi()
+    getUsersApi(query)
       .then((rep) => {
         setData(rep);
         setStatistics(rep.statistics || {});
@@ -275,6 +278,7 @@ export default function useUser() {
 
   //Modifier le statut d'un user
   const changeStatus = (userId, onSetOpen, getUsers) => {
+    console.log(userId);
     setIsLoading(true);
     updateUserStatusApi(userId)
       .then(() => {

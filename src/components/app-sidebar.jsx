@@ -2,7 +2,6 @@ import * as React from "react";
 import { IconInnerShadowTop } from "@tabler/icons-react";
 
 import { NavMain } from "src/components/nav-main";
-import { NavSecondary } from "src/components/nav-secondary";
 import { NavUser } from "src/components/nav-user";
 import {
   Sidebar,
@@ -17,7 +16,6 @@ import { useAuth } from "../auth/AuthProvider";
 import { router } from "../routes/route.jsx";
 
 export function AppSidebar({ ...props }) {
-  const { user } = useAuth();
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -39,7 +37,7 @@ export function AppSidebar({ ...props }) {
         <NavMain items={router} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

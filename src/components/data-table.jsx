@@ -22,7 +22,7 @@ export default function DataTable({
   showPagination = true,
   loading = false,
   searchValue = null,
-  onSearchChange = null,
+  onSetSearchValue = () => {},
 }) {
   const { clearData } = useAuth();
   const [isLoading, setIsLoading] = useState(loading);
@@ -67,6 +67,12 @@ export default function DataTable({
     setIsLoading(false);
   };
 
+  //Filtre des données
+  const handleFilter = (e) => {
+    setSearchTerm(e.target.value);
+    onSetSearchValue(e.target.value);
+  };
+
   return (
     <>
       {searchable && (
@@ -75,6 +81,8 @@ export default function DataTable({
           <Input
             placeholder="Filtrer"
             className="pl-8 !w-auto text-sm focus:border-transparent active:border-transparent"
+            value={searchTerm}
+            onChange={handleFilter}
           />
         </div>
       )}
