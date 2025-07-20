@@ -51,9 +51,6 @@ export const AuthProvider = ({ children }) => {
         "Une erreur s'est produite lors de la récupération des données utilisateur:",
         err
       );
-
-      console.log(err);
-      //setUser(null);
     }
   };
 
