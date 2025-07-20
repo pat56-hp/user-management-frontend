@@ -1,12 +1,84 @@
-# React + Vite
+# Frontend – Gestion des Utilisateurs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ce projet est le frontend React du mini-projet de gestion des utilisateurs. Il consomme l’API Laravel et propose une interface moderne, responsive et ergonomique.
 
-Currently, two official plugins are available:
+## 🚀 Instructions d’installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **Cloner le dépôt**
 
-## Expanding the ESLint configuration
+```bash
+git clone <repo-url> frontend
+cd frontend
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. **Installer les dépendances**
+
+```bash
+npm install
+```
+
+3. **Configurer l’URL de l’API**
+
+Vérifiez le fichier de configuration (.env) ou les hooks d’API (`src/api/`) pour pointer vers l’URL de votre backend.
+
+4. **Lancer l’application en développement**
+
+```bash
+npm run dev
+```
+
+5. **(Optionnel) Générer une version de production**
+
+```bash
+npm run build
+```
+
+## 🗂️ Structure du projet
+
+- `src/`
+  - `pages/` : Pages principales (`Dashboard`, `Login`, `Activities`)
+  - `components/` : Composants réutilisables (tableaux, sidebar, header, formulaires, etc.)
+    - `user/` : Composants liés aux utilisateurs (statut, suppression, dialogues...)
+    - `ui/` : Composants UI génériques (boutons, inputs, badges, etc.)
+  - `api/` : Fonctions d’appel à l’API (auth, user, activity...)
+  - `hooks/` : Hooks personnalisés (auth, user, activity...)
+  - `layouts/` : Layout principal de l’application
+  - `assets/` : Images, icônes, etc.
+- `public/` : Fichiers statiques (favicon, images, captures d’écran)
+
+## 🛠️ Technologies utilisées
+
+- **React 19**
+- **Vite** (build ultra-rapide)
+- **Tailwind CSS** (design moderne et responsive)
+- **React Router DOM** (navigation)
+- **Radix UI** (composants accessibles via shadcn)
+
+## ✨ Fonctionnalités principales
+
+- Authentification (connexion, déconnexion)
+- Gestion des utilisateurs (CRUD, activation/désactivation, Upload d’avatar)
+- Tableau de bord avec statistiques
+- Suivi des activités utilisateur
+- Filtres dynamiques, pagination
+- Responsive design (mobile/desktop)
+
+## 📸 Captures d’écran
+
+![Login](public/screenshots/login.png)
+
+![Dashboard admin](public/screenshots/dashboard.png)
+
+![Dashboard user](public/screenshots/dashboard2.png)
+
+![Historique d'activité](public/screenshots/activities.png)
+
+![Créer un utilisateur](public/screenshots/createUser.png)
+
+![Modifier un utilisateur](public/screenshots/updateUser.png)
+
+![Modifier le statut d'utilisateur](public/screenshots/editUserStatus.png)
+
+---
+
+Pour toute question, consultez le code source ou ouvrez une issue.
