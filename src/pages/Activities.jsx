@@ -4,9 +4,8 @@ import useActivity from "../hooks/use-activity";
 import DataTable from "../components/data-table";
 
 export default function Activities() {
-  const { columns, activities, getActivities, loading } = useActivity();
-
-  console.log("Activities data:", activities);
+  const { columns, activities, setActivities, getActivities, loading } =
+    useActivity();
 
   useEffect(() => {
     getActivities();
@@ -20,6 +19,7 @@ export default function Activities() {
 
         <DataTable
           data={activities}
+          onSetData={setActivities}
           columns={columns}
           searchable={false}
           showPagination={true}

@@ -61,6 +61,7 @@ export default function useActivity() {
   return {
     columns,
     activities,
+    setActivities,
     loading,
     getActivities,
   };
