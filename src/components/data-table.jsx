@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,10 +8,15 @@ import {
   TableRow,
 } from "./ui/table";
 import { Input } from "../components/ui/input";
-import { Loader, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader, Search } from "lucide-react";
+import { Button } from "./ui/button";
+import { useAuth } from "../auth/AuthProvider";
+import { toast } from "sonner";
+import { getDataFromPageUrl } from "../api/usePaginateApi";
 
 export default function DataTable({
   data,
+  onSetData,
   columns,
   searchable = false,
   showPagination = true,
@@ -19,7 +24,48 @@ export default function DataTable({
   searchValue = null,
   onSearchChange = null,
 }) {
-  const { data: datas, meta } = data;
+  const { clearData } = useAuth();
+  const [isLoading, setIsLoading] = useState(loading);
+  const [datas, setDatas] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [from, setFrom] = useState(0);
+  const [to, setTo] = useState(0);
+  const [searchTerm, setSearchTerm] = useState(searchValue || "");
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [prevPageUrl, setPrevPageUrl] = useState(null);
+  const [nextPageUrl, setNextPageUrl] = useState(null);
+
+  useEffect(() => {
+    const { data: userData, meta } = data;
+    setDatas(userData || []);
+    setSearchTerm(searchValue || "");
+    setCurrentPage(meta?.current_page || 1);
+    setFrom(meta?.from || 0);
+    setTo(meta?.to || 0);
+    setTotalItems(meta?.total || 0);
+    setTotalPages(meta?.last_page || 0);
+    setPrevPageUrl(meta?.prev_page_url || null);
+    setNextPageUrl(meta?.next_page_url || null);
+  }, [searchValue, data]);
+
+  //Change la page
+  const handlePageChange = (url) => {
+    setIsLoading(true);
+    getDataFromPageUrl(url)
+      .then((resp) => {
+        onSetData(resp);
+      })
+      .catch((err) => {
+        const { status } = err;
+        if (status === 401) {
+          clearData();
+        }
+        toast.error("Une erreur est survenue lors du chargement des données");
+      });
+
+    setIsLoading(false);
+  };
 
   return (
     <>
@@ -42,7 +88,7 @@ export default function DataTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
+            {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24">
                   <div className="flex justify-center">
@@ -73,6 +119,34 @@ export default function DataTable({
           </TableBody>
         </Table>
       </div>
+      {showPagination && (
+        <div className="flex items-center justify-between mt-2">
+          <div className="text-sm text-muted-foreground">
+            Affichage {from} à {to} sur {totalItems}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(prevPageUrl)}
+              disabled={currentPage === 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <div className="text-sm">
+              Page {currentPage} à {totalPages || 1}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(nextPageUrl)}
+              disabled={currentPage === totalPages || totalPages === 0}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

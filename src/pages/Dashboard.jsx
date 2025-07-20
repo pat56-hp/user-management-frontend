@@ -12,6 +12,7 @@ import UserStatusDialog from "../components/user/user-status";
 export default function Dashboard() {
   const {
     data,
+    setData,
     isLoading,
     getUsers,
     userId,
@@ -51,6 +52,7 @@ export default function Dashboard() {
 
         <DataTable
           data={data}
+          onSetData={setData}
           columns={columns}
           searchable={true}
           showPagination={true}

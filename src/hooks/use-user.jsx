@@ -115,7 +115,6 @@ export default function useUser() {
     setIsLoading(true);
     getUsersApi()
       .then((rep) => {
-        console.log(rep);
         setData(rep);
         setStatistics(rep.statistics || {});
       })
@@ -297,6 +296,7 @@ export default function useUser() {
   return {
     columns,
     data,
+    setData,
     errors,
     setErrors,
     userId,
